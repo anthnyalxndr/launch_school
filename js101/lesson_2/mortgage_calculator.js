@@ -24,21 +24,21 @@ while (true) {
    * The APR entered by the user.
    * @type{number}
    */
-  let apr = rlSync.question().trim();
+  let APR = rlSync.question().trim();
 
   // If the user's input is invalid, keep asking the user for input
   // until they input something valid.
-  while (isValidInput(apr) || Number(apr) >= 1) {
-    console.log(`\nError: ${apr} is an invalid APR.`);
+  while (isValidInput(APR) || Number(APR) >= 1) {
+    console.log(`\nError: ${APR} is an invalid APR.`);
     console.log('Please input a valid APR.');
     console.log('Example: For a 2 % APR input .02.');
-    apr = rlSync.question().trim();
+    APR = rlSync.question().trim();
   }
   /**
    * Transforms user-inputted APR to a monthly interest rate.
    * @type {number}
    */
-  let monthlyInterest = Number(apr) / 12;
+  let monthlyInterest = Number(APR) / 12;
 
   console.log('\nInput the duration of your mortgage in months:');
 
