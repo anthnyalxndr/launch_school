@@ -1,8 +1,25 @@
+// Overview: This program creates a CLI monthly mortgage payment calculator
+// that dynamically outputs a monthly mortgage payment based on user input.
+
 /**
  * Creates a readline-sync object to get user input later on.
  * @type {Object}
  */
 const rlSync = require('readline-sync');
+
+/**
+ * An object containing messages to be logged to the console
+ * by the calculator. Messages are defined in a separate JSON file.
+ * @type {Object}
+ */
+const calculatorMessages = require('./mortgage_calculator_messages.json');
+
+/**
+ * The limit for a user-inputted APR. If the APR is greater than 1 the loan
+ * costs more than the asset.
+ * @type {number}
+ */
+const APR_LIMIT = 1;
 
 /**
  * Defines a function that returns false if the user input is valid and true
@@ -15,23 +32,37 @@ const isValidInput = input => {
   return input <= 0 || Number.isNaN(input);
 };
 
-while (true) {
-  console.log('\nWelcome to the Monthly Mortgage Payment Calculator.');
+/**
+ * Requests input from the user after receiving invalid input by dynamically
+ * accessing calculatorMessages properties.
+ * @param {*} varName The name of the variable that caused the error.
+ * @param {string} varType The type of the variable that caused the error.
+ * Used for interpolation.
+ * @param {string} property The name of the property to access from
+ * calculatorMessages
+ * @returns {string}
+ */
+const requestInputAgain = (varName, varType, property) => {
+  return `\nError: ${varName} is an invalid ${varType}. ${property}`;
+};
 
-  console.log('\nInput the APR of your mortgage in decimal format (.02, .05, etc.):');
+// Start of interface
+console.log(calculatorMessages.welcome);
+
+while (true) {
+  // Request APR from the user.
+  console.log(calculatorMessages.requestAPR);
 
   /**
    * The APR entered by the user.
-   * @type{number}
+   * @type {number}
    */
   let APR = rlSync.question().trim();
 
   // If the user's input is invalid, keep asking the user for input
   // until they input something valid.
-  while (isValidInput(APR) || Number(APR) >= 1) {
-    console.log(`\nError: ${APR} is an invalid APR.`);
-    console.log('Please input a valid APR.');
-    console.log('Example: For a 2 % APR input .02.');
+  while (isValidInput(APR) || Number(APR) >= APR_LIMIT) {
+    console.log(requestInputAgain(APR, 'APR', calculatorMessages.APRError));
     APR = rlSync.question().trim();
   }
   /**
@@ -40,7 +71,8 @@ while (true) {
    */
   let monthlyInterest = Number(APR) / 12;
 
-  console.log('\nInput the duration of your mortgage in months:');
+  // Request loan duration from the user.
+  console.log(calculatorMessages.requestLoanDuration);
 
   /**
    * The duration of the loan in months.
@@ -51,13 +83,13 @@ while (true) {
   // If the user's input is invalid, keep asking the user for input
   // until they input something valid.
   while (isValidInput(parseInt(loanDuration, 10))) {
-    console.log(`\nError: ${loanDuration} is an invalid loan duration.`);
-    console.log('\nPlease input a valid loan duration.');
-    console.log('Example: For a 30 year mortgage input 360(30 x 12 = 360 months).');
+    console.log(requestInputAgain(loanDuration, 'loan duration',
+      calculatorMessages.loanDurationError));
     loanDuration = rlSync.question().trim();
   }
 
-  console.log('\nInput the total dollar amount (USD) of your mortgage:');
+  // Request the total loan amount from the user.
+  console.log(calculatorMessages.requestLoanAmount);
 
   /**
    * The amount of the loan in USD.
@@ -68,9 +100,8 @@ while (true) {
   // If the user's input is invalid, keep asking the user for input
   // until they input something valid.
   while (isValidInput(loanAmount)) {
-    console.log(`\nError: ${loanAmount} is an invalid total loan amount.`);
-    console.log('Please input a valid total loan amount.');
-    console.log('Example: A for a $500, 000 mortgage enter 500000.');
+    console.log(requestInputAgain(loanAmount, 'loan amount', calculatorMessages.loanAmountError,
+      calculatorMessages.loanAmountError));
     loanAmount = rlSync.question().trim();
   }
 
@@ -81,9 +112,11 @@ while (true) {
   let monthlyPayment = Number(loanAmount) * (monthlyInterest
     / (1 - Math.pow((1 + monthlyInterest), (-parseInt(loanDuration, 10)))));
 
+  // Log the final calculation (monthly payment) to the console.
   console.log('\nYour monthly payment is: $' + monthlyPayment.toFixed(2));
 
-  console.log('\nWould you like to calculate another monthly payment? (yes / no)');
+  // Ask the user if they'd like to repeat.
+  console.log(calculatorMessages.requestRepeat);
 
   /**
    * Indicates whether the user would like to calculate another monthly payment.
@@ -94,7 +127,8 @@ while (true) {
   // If the user's input is invalid, keep asking the user for input
   // until they input something valid.
   while (again !== 'yes' && again !== 'no') {
-    console.log(`\nError: ${again} is an invalid answer.\nPlease input a valid answer (yes / no).`);
+    console.log(requestInputAgain(again, 'answer',
+      calculatorMessages.repeatError));
     again = rlSync.question().trim().toLowerCase();
   }
 
