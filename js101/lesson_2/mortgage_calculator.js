@@ -27,9 +27,9 @@ const APR_LIMIT = 1;
  * @param {number} input User input that's been coerced to a number.
  * @returns {boolean}
  */
-const isValidInput = input => {
+const isValidInput = function (input) {
   input = Number(input);
-  return input <= 0 || Number.isNaN(input);
+  return !(input <= 0 || Number.isNaN(input));
 };
 
 /**
@@ -42,7 +42,7 @@ const isValidInput = input => {
  * calculatorMessages
  * @returns {string}
  */
-const requestInputAgain = (varName, varType, property) => {
+const requestInputAgain = function (varName, varType, property) {
   return `\nError: ${varName} is an invalid ${varType}. ${property}`;
 };
 
@@ -61,7 +61,7 @@ while (true) {
 
   // If the user's input is invalid, keep asking the user for input
   // until they input something valid.
-  while (isValidInput(APR) || Number(APR) >= APR_LIMIT) {
+  while (!isValidInput(APR) || Number(APR) >= APR_LIMIT) {
     console.log(requestInputAgain(APR, 'APR', calculatorMessages.APRError));
     APR = rlSync.question().trim();
   }
@@ -82,7 +82,7 @@ while (true) {
 
   // If the user's input is invalid, keep asking the user for input
   // until they input something valid.
-  while (isValidInput(parseInt(loanDuration, 10))) {
+  while (!isValidInput(parseInt(loanDuration, 10))) {
     console.log(requestInputAgain(loanDuration, 'loan duration',
       calculatorMessages.loanDurationError));
     loanDuration = rlSync.question().trim();
@@ -99,7 +99,7 @@ while (true) {
 
   // If the user's input is invalid, keep asking the user for input
   // until they input something valid.
-  while (isValidInput(loanAmount)) {
+  while (!isValidInput(loanAmount)) {
     console.log(requestInputAgain(loanAmount, 'loan amount', calculatorMessages.loanAmountError,
       calculatorMessages.loanAmountError));
     loanAmount = rlSync.question().trim();
