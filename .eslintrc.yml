@@ -46,6 +46,7 @@ rules:
       - z
       - i
       - j
+      - k
       min: 2
       properties: never
   indent:
