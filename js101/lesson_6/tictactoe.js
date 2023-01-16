@@ -1,129 +1,24 @@
-// P: Understand the Problem
-// ---------------------------------------------------------------
-// 1) Define all Terms and Eliminate Ambiguity
-//
-// 2) Identify Explicit & Implicit Rules and Requirements
-//     - Input:
-//         - data structure(s) / data type(s):
-//            - Range of values for the data type(s):
-//                - Strings: Upper vs lower case, alphabetic vs
-//               alphanumeric vs symbols, etc.
-//                - Numbers: Negatives, NaN, Floats, Infinity, etc.
-//            - Other Requirements:
-//                -
-//
-//         - Passing by reference, value, pointer, etc:
-//
-//         - Default parameter value(s):
-//
-//         Edge Cases:
-//           - empty / null / undefined vals allowed?:
-//           - other data types
-//
-//         Common Use Cases:
-//           - What type of input are generally going to expect?
-//
-//     - Input => Output transformation:
-//         - Side Effects vs Returning a Value?
-//             - Side Effect examples: Logging, Mutating an
-//               Object / Variable, etc
-//
-//         - Other Requirements:
-//             -
-//
-//     - Output:
-//         - data structure(s) / data type(s):
-//            - Range of values for the data type(s):
-//                - Strings: Upper vs lower case, alphabetic vs
-//                  alphanumeric vs symbols, etc.
-//                - Numbers: Negatives, NaN, Floats, Infinity, etc.
-//            - Other Requirements:
-//                -
-//
-//         - Passing by reference, value, pointer, etc:
-//
-//    3) Establish a mental model for the problem
-//        - This will be what you write out in pseudocode
-//
-//    4) Come up with questions you have about the problem
-//        -
-//
-//
-// E: Examples / Test Cases
-// ---------------------------------------------------------------
-// - Validate your understanding of the problem by ensuring the
-//   the output of your test cases matches what you'd expect
-//
-//
-// D + A: Data Structures & Algorithms
-// ---------------------------------------------------------------
-// - Data Structure
-//     - List the data structures that could be used to transform
-//       input to output.
-//     - Consider whether or not a data structure is need or if a
-//        problem can be solved formulaically / mathematically
-//
-// - Algorithm (Step by step process of input => output)
-//     - Write high level pseudocode explaining the algorithm
-//     - If one part of the algorithm is particularly complicated,
-//       go through this process for that specific part of the
-//       algorithm as if it were its own algorithm
-//         - You could also make that part of the algorithm into
-//           its own function
-//
-//
-// C: Code with Intent
-// ---------------------------------------------------------------
-// 1) Think about the algorithm in the context of your programming
-//    language
-//      - Syntax / coding patterns
-//      - Built-in functions / methods
-//      - Language features / constraints
-//      - Characterisitcs of data structures
-//
-// 2) Start by writing pseudocode
-//      - Don't get stuck trying to write the whole program in
-//        pseudocode first since that's hard to do and can't be
-//        validated.
-//
-// 3) Test Frequently
-//      - Ensure you're checking your code step-by-step as you go
-//        instead of writing a bunch of code and checking it all at
-//        once.
-//
-//      - Breaking your code into functions can make this easier
-//
-//      - Explicitly mark points in your code where you can test
-//        values.
-//          - Use breakpoints or log things to the console to ensure
-//            that your variables and function outputs are what you
-//            expect them to be.
-
 // Function & Constant Declarations
 // ----------------------------------------------------------------------------
+
 /**
  * The character representing a user's space on the game board.
  * @type {string}
  */
-const PLAYER_CHAR = 'x';
+const FIRST_PLAYER_CHAR = 'x';
 
 /**
  * The character representing the "computer's" space on the game board.
  * @type {string}
  */
-const COMPUTER_CHAR = 'o';
+const SECOND_PLAYER_CHAR = 'o';
 
 /**
  * A nested array of 3 space combinations that result in a winner.
  * @type {[[number]]}
 */
-const WINNING_COMBOS = ['012', '345', '678', '036', '147', '258', '048', '246'];
-
-/**
- * An array whose elements hold the state of each square in the game board.
- * @type {[number || string]}
- */
-const playerChoices = Array(9).fill(' ');
+const WINNING_COMBOS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
+  [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
 
 /**
  * A readlineSync object to get user input.
@@ -135,12 +30,13 @@ const readlineSync = require('readline-sync');
  * computer choices based on an index of the player choices array.
  * Rows go from 0 - 2.
  * @param {number} rowNum The row number of the game board.
+ * @param {[[number]]} The game board.
  * @returns {string} A string representation of a row of the game board.
  */
-function getRow(rowNum) {
+function getRow(board, rowNum) {
   // Ensures rowNums align with playerChoices index;
   rowNum *= 3;
-  return `  ${(rowNum / 3) + 1}  | ${playerChoices[rowNum]} | ${playerChoices[rowNum + 1]} | ${playerChoices[rowNum + 2]} |`;
+  return `  ${(rowNum / 3) + 1}  | ${board[rowNum]} | ${board[rowNum + 1]} | ${board[rowNum + 2]} |`;
 }
 /**
  * A number of space characters to align the game board.
@@ -153,18 +49,18 @@ function leftPadding() {
 
 /**
  * Logs the current state tic tac toe board to the console.
+ * @param {[[number]]} The game board.
  * @returns {undefined}
  */
-function displayBoard() {
-  console.log('Below is the current state of the board\n');
+function displayBoard(board) {
   console.log(`${leftPadding()}    Columns`);
   console.log(`${leftPadding()}   1   2   3`);
   console.log(`${leftPadding()} +---+---+---+`);
-  console.log(' ' + getRow(0));
+  console.log(' ' + getRow(board, 0));
   console.log(`R${leftPadding()}+---+---+---+`);
-  console.log('o' + getRow(1));
+  console.log('o' + getRow(board, 1));
   console.log(`w${leftPadding()}+---+---+---+`);
-  console.log('s' + getRow(2));
+  console.log('s' + getRow(board, 2));
   console.log(`${leftPadding()} +---+---+---+`);
 }
 
@@ -199,7 +95,7 @@ function getColNum() {
 /**
  * A function that makes a user re-choose their row and column number when
  * they've chosen an already picked space.
- * @returns {[number, number, number]} An array containing the row number,
+ * @returns {[number]} An array containing the row number,
  * column number, and corresponding index of the space chosen in the
  * playerChoices array.
  */
@@ -210,28 +106,65 @@ function chooseValidSpace() {
   return [rowNum, colNum, idx];
 }
 
+function getInput(board, player, userInfo) {
+  if (player === 'User') return getUserInput(board, userInfo.userChar);
+  else return getComputerInput(board, userInfo.computerChar);
+}
+
 
 /**
  * Requests the user to choose a space on the game board and marks the space
  * they've chosen with PLAYER_CHAR
+ * @param {[[number]]} The game board.
  * @returns {undefined}
  */
-function getUserInput() {
+function getUserInput(board, char) {
+  console.log('\n\n');
   console.log('What space would you like to mark?');
   let rowNum = getRowNum();
   let colNum = getColNum();
 
-  // Record the choice of the user in the playerChoices array.
+  // Record the choice of the user in the board array.
   let idx = (colNum - 1) + ((rowNum - 1) * 3);
 
   // If the space was already chosen, make the player choose a new one.
-  while (playerChoices[idx] !== ' ') {
+  while (board[idx] !== ' ') {
     console.log('Error: That space has already been chosen, please choose another');
     [rowNum, colNum, idx] = chooseValidSpace();
   }
 
   // Mark the space once we have a valid choice.
-  playerChoices[idx] = PLAYER_CHAR;
+  board[idx] = char;
+}
+
+/**
+ * Returns whether or not a tie has occured. This means the board is full.
+ * @param {[[number]]} The game board
+ * @returns {boolean}
+ */
+function isTie(board) {
+  return !board.some(el => el === ' ');
+}
+
+/**
+ * A function that chooses a random square for the computer if no
+ * offensive of defensive opportunities exist.
+ * @param {[[number]]} The game board.
+ * @returns {number} The index of the game board to mark.
+ */
+function chooseRandom(board) {
+  let rowNum = Math.floor(Math.random() * 3);
+  let colNum = Math.floor(Math.random() * 3);
+  // Record the choice of the user in the playerChoices array.
+  let idx = colNum + (rowNum * 3);
+
+  // If the space was already chosen, make the computer choose a new one.
+  while (board[idx] !== ' ') {
+    rowNum = Math.floor(Math.random() * 3);
+    colNum = Math.floor(Math.random() * 3);
+    idx = colNum + (rowNum * 3);
+  }
+  return idx;
 }
 
 /**
@@ -239,52 +172,22 @@ function getUserInput() {
  * board and then marks that space with COMPUTER_CHAR
  * @returns {undefined}
  */
-function getComputerInput() {
-  console.log('Getting computer input...');
-  let rowNum = Math.floor(Math.random() * 3);
-  let colNum = Math.floor(Math.random() * 3);
-  // Record the choice of the user in the playerChoices array.
-  let idx = colNum + (rowNum * 3);
 
-  // If the board is full return to avoid an infinite loop
-  if (playerChoices.filter(el => el === ' ').length === 0) return;
+function getComputerInput(board, char) {
+  let idx;
+  let rowNum;
+  let colNum;
+  if (offensiveOpportunity(board)) {
+    idx = offensiveOpportunity(board);
+  } else if (defensiveOpportunity(board)) {
+    idx = defensiveOpportunity(board);
+  } else idx = chooseRandom(board);
 
-  // If the space was already chosen, make the player choose a new one.
-  while (playerChoices[idx] !== ' ') {
-    rowNum = Math.floor(Math.random() * 3);
-    colNum = Math.floor(Math.random() * 3);
-    idx = colNum + (rowNum * 3);
-  }
   // Mark the space once we have a valid choice.
-  playerChoices[idx] = COMPUTER_CHAR;
+  rowNum = Math.floor(idx / 3);
+  colNum = idx - (rowNum * 3);
+  board[idx] = char;
   console.log(`The computer chose space (${rowNum + 1}, ${colNum + 1})`);
-}
-
-/**
- * Returns the indices all possible 3 element combinations in the playerChoices
- * array that match the supplied character (either the user's character or the
- * computers character).
- */
-function getAllCombos(char) {
-  // The indices of the playerChoices array for each instance
-  // of char.
-  let indices = playerChoices.reduce((prev, cur, idx) => {
-    if (cur === char) prev.push(idx);
-    return prev;
-  }, []);
-  let allCombos = [];
-
-  // 3 nested loops to get all possible combinations of 3 indices in
-  // the indices array.
-  for (let i = 0; i < indices.length; i++) {
-    for (let j = i + 1; j < indices.length; j++) {
-      for (let k = j + 1; k < indices.length; k++) {
-        if (indices[k] === undefined) break;
-        allCombos.push(`${indices[i]}${indices[j]}${indices[k]}`);
-      }
-    }
-  }
-  return allCombos;
 }
 
 /**
@@ -292,58 +195,177 @@ function getAllCombos(char) {
  * on the board
  * @param {string} char The character that the player (or computer) is using.
  */
-function isWinner(char) {
-  let combos = getAllCombos(char);
-
-  for (let combo of combos) {
-    if (WINNING_COMBOS.some(el => el === combo)) return true;
+function isWinner(board, char) {
+  for (let combo of WINNING_COMBOS) {
+    let [idxOne, idxTwo, idxThree] = combo;
+    if (
+      board[idxOne] === char &&
+      board[idxTwo] === char &&
+      board[idxThree] === char
+    ) return true;
   }
-
   // If a winning combo isn't found return false
   return false;
 }
 
-function isTie() {
-  return !playerChoices.some(el => el === ' ');
-}
-
 // If it's a winning board, display the winner.
 // If the board is full, display tie.
-function logResult(winner) {
-  if (winner) console.log(`${winner} wins.`);
-  else console.log("It's a tie game.");
+function logResult(board, userInfo) {
+  console.clear();
+  if (isWinner(board, userInfo.firstPlayerChar)) console.log(`${userInfo.firstPlayer} wins.\n`);
+  else if (isWinner(board, userInfo.secondPlayerChar)) console.log(`${userInfo.secondPlayer} wins.\n`);
+  else console.log("It's a tie game.\n");
+  displayBoard(board);
+  console.log('\n\n');
 }
-// Code
-// ----------------------------------------------------------------------------
-let playAgain = 'yes';
-while (playAgain) {
-  /**
-   * The Winner of the game.
-   */
-  let winner;
-  let tieGame;
-  console.log('Let the games begin...');
-  while (!winner && !tieGame) {
-    // Step 1: Display the current board
-    displayBoard();
 
-    // Step 2: Get the user and computer's choices for their spaces
-    // on the board.
-    getUserInput();
-    if (isWinner(PLAYER_CHAR)) winner = 'User';
-    else if (!winner) {
-      getComputerInput();
-      if (isWinner(COMPUTER_CHAR)) winner = 'Computer';
-    } else tieGame = isTie();
-  }
-
-  logResult(winner);
-  playAgain = readlineSync.question('Would you like to play again? (yes or no) ');
+function playAgain() {
+  let playAgain = readlineSync.question('Would you like to play again? (yes or no) ');
   while (!['yes', 'no'].includes(playAgain)) {
     console.log('Error: please input a valid response');
     playAgain = readlineSync.question('Would you like to play again? (yes or no) ');
   }
-  if (playAgain === 'yes') continue;
-  else break;
+  return playAgain;
 }
-console.log('The game has ended. Good bye...');
+
+/**
+ * Makes the computer prevent at least one potential winning path
+ * that the user could do on their next move by choosing the square
+ * that prevents the user from winning.
+ * @returns {number || null}
+ */
+
+function defensiveOpportunity(board) {
+  let missingSquare;
+  for (let combo of WINNING_COMBOS) {
+    let count = 0;
+    let [idxOne, idxTwo, idxThree] = combo;
+    if (board[idxOne] === FIRST_PLAYER_CHAR) count += 1;
+    else missingSquare = idxOne;
+    if (board[idxTwo] === FIRST_PLAYER_CHAR) count += 1;
+    else missingSquare = idxTwo;
+    if (board[idxThree] === FIRST_PLAYER_CHAR) count += 1;
+    else missingSquare = idxThree;
+    // Decrement count if the other player's char is 1 of 3 spaces in the combo.
+    if ([
+      board[idxOne],
+      board[idxTwo],
+      board[idxThree]].includes(SECOND_PLAYER_CHAR)) count -= 1;
+    if (count === 2) return missingSquare;
+  }
+  return null;
+}
+
+/**
+ * Makes the computer prevent at least one potential winning path
+ * that the user could do on their next move by choosing the square
+ * that prevents the user from winning.
+ * @returns {number || null}
+ */
+
+function offensiveOpportunity(board) {
+  let missingSquare;
+  for (let combo of WINNING_COMBOS) {
+    let count = 0;
+    let [idxOne, idxTwo, idxThree] = combo;
+    if (board[idxOne] === SECOND_PLAYER_CHAR) count += 1;
+    else missingSquare = idxOne;
+    if (board[idxTwo] === SECOND_PLAYER_CHAR) count += 1;
+    else missingSquare = idxTwo;
+    if (board[idxThree] === SECOND_PLAYER_CHAR) count += 1;
+    else missingSquare = idxThree;
+    // Decrement count if the other player's char is 1 of 3 spaces in the combo.
+    if ([
+      board[idxOne],
+      board[idxTwo],
+      board[idxThree]].includes(FIRST_PLAYER_CHAR)) count -= 1;
+    if (count === 2) return missingSquare;
+  }
+  return null;
+}
+
+function chooseFirstPlayer() {
+  console.clear();
+  let first = readlineSync.question("Who should go first? Enter 'Computer' or 'User': ");
+
+  while (!['Computer', 'User'].includes(first)) {
+    console.log("Error: Invalid Answer.");
+    first = readlineSync.question("Please enter 'Computer' or 'User'");
+  }
+  return first;
+}
+
+// Code
+// ----------------------------------------------------------------------------
+// Outer Game Loop: Continues until the user explicitly states they don't
+// want to play again.
+while (true) {
+  /**
+   * An array whose elements hold the state of each square in the game board.
+   * @type {[number || string]}
+   */
+  let board = Array(9).fill(' ');
+
+  /**
+   * A manually set constant that determines the player who goes first in the
+   * game. Either "User" or "Computer".
+   * @type {string}
+   */
+  const FIRST_PLAYER = chooseFirstPlayer();
+
+  /**
+   * The character the first player uses to mark a space.
+   */
+  const FIRST_PLAYER_CHAR = 'x';
+
+  /**
+   * A manually set constant that determines the player who goes first in the
+   * game. Either "User" or "Computer".
+   * @type {string}
+   */
+  const SECOND_PLAYER = (FIRST_PLAYER === 'User') ? 'Computer' : 'User';
+
+  /**
+   * The character the second player uses to mark a space.
+   */
+  const SECOND_PLAYER_CHAR = 'o';
+
+  /**
+   * For elegance & dynamic code, place all user info in an object to
+   * feed into functions.
+   */
+  const PLAYER_INFO = {
+    firstPlayer: FIRST_PLAYER,
+    secondPlayer: SECOND_PLAYER,
+    firstPlayerChar: FIRST_PLAYER_CHAR,
+    secondPlayerChar: SECOND_PLAYER_CHAR
+  };
+
+  // Add userChar & computerChar properties to player info for use in functions.
+  PLAYER_INFO['userChar'] = (FIRST_PLAYER === 'User') ? FIRST_PLAYER_CHAR : SECOND_PLAYER_CHAR;
+  PLAYER_INFO['computerChar'] = (FIRST_PLAYER === 'User') ? SECOND_PLAYER_CHAR : FIRST_PLAYER_CHAR;
+
+  // Inner game loop: Keeps looping until someone wins or a tie happens.
+  while (true) {
+    // Step 1: Display the current board
+    console.clear();
+    if (FIRST_PLAYER === 'User') displayBoard(board);
+
+    // Step 2: Get the user and computer's choices for their spaces
+    // on the board.
+    getInput(board, FIRST_PLAYER, PLAYER_INFO);
+    if (FIRST_PLAYER === 'Computer') displayBoard(board);
+    if (isWinner(board, FIRST_PLAYER_CHAR) || isTie(board)) break;
+
+    getInput(board, SECOND_PLAYER, PLAYER_INFO);
+    if (isWinner(board, SECOND_PLAYER_CHAR) || isTie(board)) break;
+  }
+
+  logResult(board, PLAYER_INFO);
+
+  if (playAgain() === 'yes') {
+    continue;
+  } else break;
+}
+console.clear();
+console.log('The game has ended. Good bye...\n');
