@@ -14,13 +14,12 @@ const readlineSync = require('readline-sync');
 class Player {
   constructor(handArg) {
     this.hand = handArg;
-    // Note: I still need to update handValue every time a card is added to hand
     this.handValue = getHandValue(this.hand);
     this.showingCard = this.hand[0];
   }
   hit = function (deck) {
     this.hand.push(drawFromDeck(deck, 1)[0]);
-    this.handValue = getHandValue(this.hand);
+    this.handValue = getHandValue(this.hand); // Auto-update handValue every time a card is added to hand.
     return null;
   };
   bust = function () {
@@ -29,7 +28,7 @@ class Player {
 }
 
 /**
- * Class encapsulating dealer cards and game functionality.
+ * Child class encapsulating dealer cards and game functionality.
  */
 class Dealer extends Player {
   constructor(handArg) {
@@ -39,7 +38,7 @@ class Dealer extends Player {
     if (this.handValue > 16) return null;
     else while (this.handValue < 17) {
       this.hand.push(drawFromDeck(deck, 1)[0]);
-      this.handValue = getHandValue(this.hand);
+      this.handValue = getHandValue(this.hand); // Auto-update handValue every time a card is added to hand.
     }
     return null;
   }
@@ -100,29 +99,29 @@ function getHandValue(hand) {
 /**
  * A function that logs the winner of the game based on who has the higher
  * hand value.
- * @param {number} playerHandValue The total value of the player's hand.
- * @param {number} dealerHandValue The total value of the dealer's hand.
+ * @param {number} player.handValue The total value of the player's hand.
+ * @param {number} dealer.handValue The total value of the dealer's hand.
  * @returns {null} Messages are logged to the console but nothing is returned.
  */
 // eslint-disable-next-line max-lines-per-function
-function logWinner(playerHand, playerHandValue, dealerHand, dealerHandValue) {
+function logWinner(player, dealer) {
   console.clear();
-  if (playerHandValue > 22 && dealerHandValue < 22) {
-    console.log(`Dealer wins with a hand value of ${dealerHandValue} and the following hand: [${dealerHand}].`);
-    console.log(`Your hand value was ${playerHandValue} with the following hand: [${playerHand}].`);
-  } else if (playerHandValue < 22 && dealerHandValue > 22) {
-    console.log(`You win with a hand value of ${playerHandValue} and the following hand: [${playerHand}].`);
-    console.log(`The dealer had a hand value of ${dealerHandValue} and the following hand: [${dealerHand}]`);
-  } else if (playerHandValue > dealerHandValue && playerHandValue < 22) {
-    console.log(`You win with a hand value of ${playerHandValue} and the following hand: [${playerHand}].`);
-    console.log(`The dealer had a hand value of ${dealerHandValue} and the following hand: [${dealerHand}]`);
-  } else if (playerHandValue < dealerHandValue && dealerHandValue < 22) {
-    console.log(`Dealer wins with a hand value of ${dealerHandValue} and the following hand: [${dealerHand}].`);
-    console.log(`Your hand value was ${playerHandValue} with the following hand: [${playerHand}].`);
+  if (player.handValue > 22 && dealer.handValue < 22) {
+    console.log(`Dealer wins with a hand value of ${dealer.handValue} and the following hand: [${dealer.hand}].`);
+    console.log(`Your hand value was ${player.handValue} with the following hand: [${player.hand}].`);
+  } else if (player.handValue < 22 && dealer.handValue > 22) {
+    console.log(`You win with a hand value of ${player.handValue} and the following hand: [${player.hand}].`);
+    console.log(`The dealer had a hand value of ${dealer.handValue} and the following hand: [${dealer.hand}]`);
+  } else if (player.handValue > dealer.handValue && player.handValue < 22) {
+    console.log(`You win with a hand value of ${player.handValue} and the following hand: [${player.hand}].`);
+    console.log(`The dealer had a hand value of ${dealer.handValue} and the following hand: [${dealer.hand}]`);
+  } else if (player.handValue < dealer.handValue && dealer.handValue < 22) {
+    console.log(`Dealer wins with a hand value of ${dealer.handValue} and the following hand: [${dealer.hand}].`);
+    console.log(`Your hand value was ${player.handValue} with the following hand: [${player.hand}].`);
   } else {
-    console.log(`It's a Tie. You and the Dealer each have a hand value of ${playerHandValue}.`);
-    console.log(`Dealer's Hand: [${dealerHand}]`);
-    console.log(`Your hand: [${playerHand}]`);
+    console.log(`It's a Tie. You and the Dealer each have a hand value of ${player.handValue}.`);
+    console.log(`Dealer's Hand: [${dealer.hand}]`);
+    console.log(`Your hand: [${player.hand}]`);
   }
   return null;
 }
@@ -153,7 +152,8 @@ while (true) {
   // Initialize the deck. No need for shuffling given that we randomly
   // select from the deck.
   /**
-   * The deck of cards for the game.
+   * The deck of cards for the game. Suits are ignored since
+   * they're not essential for game play.
    * @type {[string]}
    */
   const deck = '2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, Ace, '.repeat(4).split(', ').slice(0, -1);
@@ -179,18 +179,19 @@ while (true) {
     }
     if (decision === 'hit') {
       player.hit(deck);
-    } else break; // If they don't hit, they stay, and we should exit our loop.
-    if (player.bust()) { // If the player busts, break out of the loop
+    } else break; // If you don't hit, you stay. Therefore we should exit our loop.
+    if (player.bust()) { // If the player busts, break out of the loop.
       break;
     }
   }
 
-  // Dealer's turn. The dealer doesn't need to go if the player busts or has 21.
+  // Dealer's turn.
+  // The dealer doesn't need to go if the player busts or has 21.
   if (player.handValue < 21 && !player.bust()) {
     dealer.hit(deck);
   }
 
-  logWinner(player.hand, player.handValue, dealer.hand, dealer.handValue);
+  logWinner(player, dealer);
 
   // Ask if the user wants to play again
   if (playAgain() === 'yes') continue;
