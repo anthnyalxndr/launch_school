@@ -97,31 +97,47 @@ function getHandValue(hand) {
 }
 
 /**
+ * A function that determines whether or not the player won the game.
+ * @param {object} player An instance of the player class.
+ * @param {object} dealer An instance of the dealer class.
+ * @returns {boolean}
+ */
+function playerWins(player, dealer) {
+  return (player.handValue < 22 && dealer.handValue > 21) ||
+    (player.handValue > dealer.handValue && player.handValue < 22);
+}
+
+/**
+ * A function that determines whether or not the dealer won the game.
+ * @param {object} player An instance of the player class.
+ * @param {object} dealer An instance of the dealer class.
+ * @returns {boolean}
+ */
+function dealerWins(player, dealer) {
+  return (player.handValue > 21 && dealer.handValue < 22) ||
+    (player.handValue < dealer.handValue && dealer.handValue < 22);
+}
+
+/**
  * A function that logs the winner of the game based on who has the higher
  * hand value.
  * @param {number} player.handValue The total value of the player's hand.
  * @param {number} dealer.handValue The total value of the dealer's hand.
  * @returns {null} Messages are logged to the console but nothing is returned.
  */
-// eslint-disable-next-line max-lines-per-function
+
 function logWinner(player, dealer) {
   console.clear();
-  if (player.handValue > 22 && dealer.handValue < 22) {
+  if (dealerWins(player, dealer)) {
     console.log(`Dealer wins with a hand value of ${dealer.handValue} and the following hand: [${dealer.hand}].`);
     console.log(`Your hand value was ${player.handValue} with the following hand: [${player.hand}].`);
-  } else if (player.handValue < 22 && dealer.handValue > 22) {
+  } else if (playerWins(player, dealer)) {
     console.log(`You win with a hand value of ${player.handValue} and the following hand: [${player.hand}].`);
-    console.log(`The dealer had a hand value of ${dealer.handValue} and the following hand: [${dealer.hand}]`);
-  } else if (player.handValue > dealer.handValue && player.handValue < 22) {
-    console.log(`You win with a hand value of ${player.handValue} and the following hand: [${player.hand}].`);
-    console.log(`The dealer had a hand value of ${dealer.handValue} and the following hand: [${dealer.hand}]`);
-  } else if (player.handValue < dealer.handValue && dealer.handValue < 22) {
-    console.log(`Dealer wins with a hand value of ${dealer.handValue} and the following hand: [${dealer.hand}].`);
-    console.log(`Your hand value was ${player.handValue} with the following hand: [${player.hand}].`);
+    console.log(`The dealer had a hand value of ${dealer.handValue} and the following hand: [${dealer.hand}].`);
   } else {
     console.log(`It's a Tie. You and the Dealer each have a hand value of ${player.handValue}.`);
-    console.log(`Dealer's Hand: [${dealer.hand}]`);
-    console.log(`Your hand: [${player.hand}]`);
+    console.log(`Dealer's Hand: [${dealer.hand}].`);
+    console.log(`Your hand: [${player.hand}].`);
   }
   return null;
 }
@@ -165,8 +181,8 @@ while (true) {
   // Player's Turn
   while (true) {
     console.clear();
-    console.log(`Dealer's Shown Card: ${dealer.showingCard}\n`);
-    console.log(`Your current hand [${player.hand}] has a value of ${player.handValue}\n`);
+    console.log(`Dealer's Shown Card: ${dealer.showingCard}.\n`);
+    console.log(`Your current hand [${player.hand}] has a value of ${player.handValue}.\n`);
 
     if (player.handValue === 21) {
       break;
@@ -174,7 +190,7 @@ while (true) {
 
     let decision = readlineSync.question("It's your turn. Would you like to hit or stay? ");
     while (!['hit', 'stay'].includes(decision)) {
-      console.log('Error: Invalid Choice. Please input "hit" or "stay"');
+      console.log('Error: Invalid Choice. Please input "hit" or "stay".');
       decision = readlineSync.question("Would you like to hit or stay? ");
     }
     if (decision === 'hit') {
