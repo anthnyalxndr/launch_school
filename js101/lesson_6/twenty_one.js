@@ -36,7 +36,7 @@ class Dealer extends Player {
   }
   hit = function (deck) {
     if (this.handValue > 16) return null;
-    else while (this.handValue < 17) {
+    else while (this.handValue < 17) { // Stop hitting if dealer's handValue is 17 or greater.
       this.hand.push(drawFromDeck(deck, 1)[0]);
       this.handValue = getHandValue(this.hand); // Auto-update handValue every time a card is added to hand.
     }
@@ -56,7 +56,7 @@ function drawFromDeck(deck, numofCards) {
   for (let i = 0; i < numofCards; i++) {
     let idx = Math.floor(Math.random() * (deck.length - 1));
     let card = deck[idx];
-    // Remove card at idxOne
+    // Remove the drawn card from the deck.
     deck.splice(idx, 1);
     // Push the drawn card to the cards array that will be returned
     cards.push(card);
@@ -121,9 +121,9 @@ function dealerWins(player, dealer) {
 /**
  * A function that logs the winner of the game based on who has the higher
  * hand value.
- * @param {number} player.handValue The total value of the player's hand.
- * @param {number} dealer.handValue The total value of the dealer's hand.
- * @returns {null} Messages are logged to the console but nothing is returned.
+ * @param {object} player An instance of the player class.
+ * @param {object} dealer An instance of the dealer class.
+ * @returns {null}
  */
 
 function logWinner(player, dealer) {
@@ -143,8 +143,9 @@ function logWinner(player, dealer) {
 }
 
 /**
- * A function that asks the user if they want to play again and either restarts
- * the game or ends it.
+ * A function that asks the user if they want to play again and returns the
+ * answer
+ * @returns {string}
  */
 function playAgain() {
   console.log('\n');
@@ -166,7 +167,7 @@ function playAgain() {
  */
 while (true) {
   // Initialize the deck. No need for shuffling given that we randomly
-  // select from the deck.
+  // select from the deck when drawing a card.
   /**
    * The deck of cards for the game. Suits are ignored since
    * they're not essential for game play.
@@ -188,11 +189,14 @@ while (true) {
       break;
     }
 
+    // Get the player's decision. "hit" or "stay".
     let decision = readlineSync.question("It's your turn. Would you like to hit or stay? ");
     while (!['hit', 'stay'].includes(decision)) {
       console.log('Error: Invalid Choice. Please input "hit" or "stay".');
       decision = readlineSync.question("Would you like to hit or stay? ");
     }
+
+    // Enact the player's decision.
     if (decision === 'hit') {
       player.hit(deck);
     } else break; // If you don't hit, you stay. Therefore we should exit our loop.
