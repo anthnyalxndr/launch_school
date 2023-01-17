@@ -1,7 +1,7 @@
-/**
- * Declarations
- * ---------------------------------------------------------------------------
- */
+// Description:
+// This program builds a command-line version of a
+// stripped down Blackjack game.
+
 /**
  * readlineSync object to get user input from the console.
  * @type {object}
@@ -19,7 +19,8 @@ class Player {
   }
   hit = function (deck) {
     this.hand.push(drawFromDeck(deck, 1)[0]);
-    this.handValue = getHandValue(this.hand); // Auto-update handValue every time a card is added to hand.
+    // Auto-update handValue every time a card is added to hand.
+    this.handValue = getHandValue(this.hand);
     return null;
   };
   bust = function () {
@@ -128,6 +129,8 @@ function dealerWins(player, dealer) {
 
 function logWinner(player, dealer) {
   console.clear();
+  console.log('Game Over');
+  console.log('---------');
   if (dealerWins(player, dealer)) {
     console.log(`Dealer wins with a hand value of ${dealer.handValue} and the following hand: [${dealer.hand}].`);
     console.log(`Your hand value was ${player.handValue} with the following hand: [${player.hand}].`);
@@ -161,10 +164,7 @@ function playAgain() {
   return answer;
 }
 
-/**
- * Code
- * ----------------------------------------------------------------------------
- */
+// Game begins.
 while (true) {
   // Initialize the deck. No need for shuffling given that we randomly
   // select from the deck when drawing a card.
@@ -182,7 +182,9 @@ while (true) {
   // Player's Turn
   while (true) {
     console.clear();
-    console.log(`Dealer's Shown Card: ${dealer.showingCard}.\n`);
+    console.log('Welcome to Blackjack');
+    console.log('--------------------\n');
+    console.log(`The Dealer is showing: ${dealer.showingCard}\n`);
     console.log(`Your current hand [${player.hand}] has a value of ${player.handValue}.\n`);
 
     if (player.handValue === 21) {
@@ -190,7 +192,7 @@ while (true) {
     }
 
     // Get the player's decision. "hit" or "stay".
-    let decision = readlineSync.question("It's your turn. Would you like to hit or stay? ");
+    let decision = readlineSync.question("=> It's your turn. Would you like to hit or stay? ");
     while (!['hit', 'stay'].includes(decision)) {
       console.log('Error: Invalid Choice. Please input "hit" or "stay".');
       decision = readlineSync.question("Would you like to hit or stay? ");
