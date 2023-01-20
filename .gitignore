@@ -1,7 +1,7 @@
 # Launch School Directories
 /intro_to_programming_with_js/sb*
 /js109_assessment
-events
+notes
 
 #VS Code gitignore extension additions specific to MacOS.
 *.DS_Store
