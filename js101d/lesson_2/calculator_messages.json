@@ -1,0 +1,8 @@
+{
+    "num1" : "What's the first number?",
+    "num2" : "What's the second number?",
+    "op" : "What's the operation?\nAdd = 1\nSubract = 2\nMultiply = 3\nDivide = 4",
+    "invalid_num" : "Please input a valid number",
+    "invalid_op" : "Please input a valid operation number",
+    "continue" : "Would you like to continue? (yes / no)"
+}
