@@ -15,9 +15,9 @@ function transpose(matrix) {
   // Loop over the sub arrays
   // In each loop of the subarray, push the element of cur at arrIdx to the
   // subArr in prev at arrIdx.
-  return matrix.reduce((prev, cur, idx) => {
+  return matrix.reduce((prev, cur) => {
     for (let arrIdx = 0; arrIdx < prev.length; arrIdx++) {
-      prev[arrIdx].push(cur[arrIdx])
+      prev[arrIdx].push(cur[arrIdx]);
     }
     return prev;
   }, newArr);

@@ -3,27 +3,42 @@
  * process behind the problem below the problem and test cases.
  */
 
-function sortStringsByConsonants(arr) {
-  let max = 0;
-  let curCount = 0;
-  let counts = {};
-  // Loop over the elements
-  arr.forEach(el => {
-    let cleanedString = el.replace(/[\s]/g, '');
-    for (let idx = 0; idx < cleanedString.length; idx += 1) {
-      if (/[^aeiou]/i.test(cleanedString[idx])) {
-        curCount += 1;
-        if (curCount > 1 && curCount > max) {
-          max = curCount;
-        }
-      } else curCount = 0;
-    }
-    counts[el] = max;
-    max = 0;
-    curCount = 0;
-  });
-  return Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+// Succinct solution
+function getCount(str) {
+  let el = str.replace(' ', '');
+  let consanants = el.split(/[aeiou]/i);
+  let counts = consanants.map(el => el.length);
+  return [el, Math.max(...counts)];
 }
+
+function sortStringsByConsonants(arr) {
+  let newArr = arr.slice();
+  let counts = Object.fromEntries(newArr.map(getCount));
+  return newArr.sort((a, b) => counts[b] - counts[a]);
+}
+
+// Longer solution
+// function sortStringsByConsonants(arr) {
+//   let max = 0;
+//   let curCount = 0;
+//   let counts = {};
+//   // Loop over the elements
+//   arr.forEach(el => {
+//     let cleanedString = el.replace(/[\s]/g, '');
+//     for (let idx = 0; idx < cleanedString.length; idx += 1) {
+//       if (/[^aeiou]/i.test(cleanedString[idx])) {
+//         curCount += 1;
+//         if (curCount > 1 && curCount > max) {
+//           max = curCount;
+//         }
+//       } else curCount = 0;
+//     }
+//     counts[el] = max;
+//     max = 0;
+//     curCount = 0;
+//   });
+//   return Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+// }
 
 
 console.log(sortStringsByConsonants(
