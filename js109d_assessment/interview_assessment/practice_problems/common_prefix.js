@@ -12,16 +12,11 @@ function commonPrefix(arr /*of strings*/) {
     // Loop by splitting first element into own array and using reduce
   let firstEl = arr[0];
 
-  for (let idx = 0; idx < firstEl.length; idx++) {
-    let isCommon = true;
-    let curPrefix = firstEl.slice(0, idx + 1);
-    // console.log({ firstEl }, { isCommon }, { curPrefix });
-    arr.slice(1).forEach((el) => {
-      let compPrefix = el.slice(0, idx + 1);
-      // console.log({ el }, { compPrefix });
-      if (compPrefix !== curPrefix) isCommon = false;
-    });
-    if (isCommon === false) break;
+  for (let idx = 1; idx < firstEl.length + 1; idx++) {
+    let curPrefix = firstEl.slice(0, idx);
+    if (!arr.every(el => el.slice(0, idx) === curPrefix)) {
+      break;
+    }
     longestCommonPrefix = curPrefix;
   }
     // Create a prefix starting with the first char
