@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-lines-per-function, max-statements
 function binarySearch(arr, target) {
   let startIdx = 0;
   let endIdx = arr.length - 1;
