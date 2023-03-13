@@ -1,27 +1,18 @@
 // eslint-disable-next-line max-lines-per-function, max-statements
-function binarySearch(arr, element) {
-  let currentArray = arr.slice();
-  let halfwayIdx = Math.floor((currentArray.length - 1) / 2);
-  let currentElement = currentArray[halfwayIdx];
-  let finalIdx = halfwayIdx;
+function binarySearch(arr, target) {
+  let startIdx = 0;
+  let endIdx = arr.length - 1;
+  let middleIdx = Math.floor(endIdx / 2);
+  do {
+    let middleElement = arr[middleIdx];
+    if (target === middleElement) return middleIdx;
+    else if (target < middleElement) endIdx = middleIdx - 1;
+    else startIdx = middleIdx + 1;
+    middleIdx = Math.floor((endIdx - startIdx) / 2) + startIdx;
+  } while (startIdx <= endIdx);
 
-  while (currentArray.length > 0) {
-    currentElement = currentArray[halfwayIdx];
-    let currentElementIsLess = currentElement < element;
-    if (currentElementIsLess) {
-      if (finalIdx === 0) return -1;
-      currentArray = currentArray.slice(halfwayIdx);
-    } else if (!currentElementIsLess) {
-      if (finalIdx === 0) return -1;
-      currentArray = currentArray.slice(0, halfwayIdx);
-    }
-    halfwayIdx = Math.floor(currentArray.length / 2);
-    finalIdx = currentElementIsLess ? finalIdx + halfwayIdx : halfwayIdx;
-    if (arr[finalIdx] === element) return finalIdx;
-  }
-  return currentElement === element ? finalIdx : -1;
+  return -1;
 }
-
 let yellowPages = [
   "Apple Store",
   "Bags Galore",
