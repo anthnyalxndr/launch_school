@@ -6,6 +6,7 @@
     "prettier": "2.8.3"
   },
   "dependencies": {
+    "fraction.js": "github:infusion/Fraction.js",
     "readline-sync": "^1.4.10",
     "setTimeout": "^0.4.9"
   }
