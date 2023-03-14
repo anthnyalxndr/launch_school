@@ -41,11 +41,12 @@ function isBlockWord(word) {
     if (word.includes(blockLetter1) && word.includes(blockLetter2)) {
       return false;
     }
-    let regexBlockLetter1 = new RegExp(`.*${blockLetter1}.*`, 'gi');
-    let regexBlockLetter2 = new RegExp(`.*${blockLetter2}.*`, 'gi');
+    let regexBlockLetter1 = new RegExp(`${blockLetter1}`, 'gi');
+    let regexBlockLetter2 = new RegExp(`${blockLetter2}`, 'gi');
     let countBlockLetter1 = capsWord.match(regexBlockLetter1) ?? [];
     let countBlockLetter2 = capsWord.match(regexBlockLetter2) ?? [];
-    if (countBlockLetter1.length > 1 || countBlockLetter2.length > 1) {
+    if (countBlockLetter1.length > 1 ||
+      countBlockLetter2.length > 1) {
       return false;
     }
   }
