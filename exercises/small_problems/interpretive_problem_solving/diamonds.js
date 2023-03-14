@@ -39,19 +39,27 @@ function diamond(rows) {
 
 // Examples:
 console.log(diamond(1));
-/*logs
+/*
+
+logs
 *
+
 */
 
 console.log(diamond(3));
-/*logs
+/*
+
+logs
  *
 ***
  *
+
 */
 
 console.log(diamond(9));
-/* logs
+/*
+
+logs
     *
    ***
   *****
@@ -61,6 +69,7 @@ console.log(diamond(9));
   *****
    ***
     *
+
 */
 
 function pedac() {
