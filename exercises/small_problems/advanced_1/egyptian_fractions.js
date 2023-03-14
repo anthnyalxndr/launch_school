@@ -1,4 +1,3 @@
-/* eslint-disable id-length */
 /*
 A Rational Number is any number that can be represented as the result of the
 division between two integers, e.g., 1/3, 3/2, 22/7, etc. The number to the
@@ -51,13 +50,10 @@ function unegyptian(denominators) {
 }
 
 function testCases() {
-  {
-    // console.log(egyptian(new Fraction(2, 1))); // -> [1, 2, 3, 6]
-    // console.log(egyptian(new Fraction(137, 60))); // -> [1, 2, 3, 4, 5]
-    // console.log(egyptian(new Fraction(3, 1)));
-    // -> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 230, 57960]
-  }
-
+  console.log(egyptian(new Fraction(2, 1))); // -> [1, 2, 3, 6]
+  console.log(egyptian(new Fraction(137, 60))); // -> [1, 2, 3, 4, 5]
+  console.log(egyptian(new Fraction(3, 1)));
+  // -> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 230, 57960]
   console.log(unegyptian(egyptian(new Fraction(1, 2))) === 0.5); // logs 0.5
   console.log(unegyptian(egyptian(new Fraction(3, 4))) === 0.75); // logs 0.75
   console.log(unegyptian(egyptian(new Fraction(39, 20))) === 1.95); // logs 1.95
