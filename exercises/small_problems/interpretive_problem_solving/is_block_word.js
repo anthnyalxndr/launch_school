@@ -1,5 +1,7 @@
 // Stats:
-// Solved in 10 minutes
+// Solved in 10 minutes but had to go back and account for rules that I forgot
+// about. Good lesson to go back and check your PEDAC frequently throughout
+// the problem.
 
 /*
 A collection of spelling blocks has two letters per block, as shown in this
