@@ -20,19 +20,17 @@ function toggleSwitch(idx, lights) {
   lights[idx] = !lights[idx];
 }
 
-function iterateByMultiple(curIdx, multiple, totalSwitches, lights) {
-  while (curIdx < totalSwitches) {
+function toggleAllSwitches(idx, multiple, lights, totalSwitches) {
+  for (let curIdx = idx; curIdx < totalSwitches; curIdx += multiple) {
     toggleSwitch(curIdx, lights);
-    curIdx += multiple;
   }
 }
 
 function lightsOn(totalSwitches) {
   let lights = Array(totalSwitches).fill(false);
+
   for (let idx = 0; idx < totalSwitches; idx++) {
-    let multiple = idx + 1;
-    let curIdx = idx;
-    iterateByMultiple(curIdx, multiple, totalSwitches, lights);
+    toggleAllSwitches(idx, idx + 1, lights, totalSwitches);
   }
 
   let lightNumbers = lights.map((_, idx) => idx + 1);
