@@ -35,16 +35,14 @@ const BLOCKS = {
   Z: "M",
 };
 function isBlockWord(word) {
-  let capsWord = word.toUpperCase();
+  let capsWord = word.toUpperCase().split('');
   for (let blockLetter1 in BLOCKS) {
     let blockLetter2 = BLOCKS[blockLetter1];
-    if (word.includes(blockLetter1) && word.includes(blockLetter2)) {
+    if (capsWord.includes(blockLetter1) && capsWord.includes(blockLetter2)) {
       return false;
     }
-    let regexBlockLetter1 = new RegExp(`${blockLetter1}`, 'gi');
-    let regexBlockLetter2 = new RegExp(`${blockLetter2}`, 'gi');
-    let countBlockLetter1 = capsWord.match(regexBlockLetter1) ?? [];
-    let countBlockLetter2 = capsWord.match(regexBlockLetter2) ?? [];
+    let countBlockLetter1 = capsWord.filter(word => word === blockLetter1);
+    let countBlockLetter2 = capsWord.filter(word => word === blockLetter2);
     if (countBlockLetter1.length > 1 ||
       countBlockLetter2.length > 1) {
       return false;
@@ -53,9 +51,14 @@ function isBlockWord(word) {
   return true;
 }
 // Examples:
-console.log(isBlockWord("BATCH")); // true
-console.log(isBlockWord("BUTCH")); // false
-console.log(isBlockWord("jest")); // true
+console.log(isBlockWord('BATCH') === true);      // true
+console.log(isBlockWord('BUTCH') === false);      // false
+console.log(isBlockWord('jest') === true);       // true
+console.log(isBlockWord('floW') === true);       // true
+console.log(isBlockWord('APPLE') === false);      // false
+console.log(isBlockWord('apple') === false);      // false
+console.log(isBlockWord('apPLE') === false);      // false
+console.log(isBlockWord('Box') === false);        // false
 
 function pedac() {
   function understandTheProblem() {
