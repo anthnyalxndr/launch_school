@@ -1,3 +1,22 @@
+/*
+TODO:
+  - Try to arrange the code so that:
+    - The user can see the welcome message and the board simultaneously when
+    she starts the game.
+    - Don't display the welcome message after the human's first move.
+    - Try to always display the board at the same location on the screen
+    regardless of whether the welcome message is present.
+      - LS used two different display methods to accomplish this.
+        - See https://launchschool.com/lessons/93a83d87/assignments/527c4a79
+
+  - Consider adding a Board class
+    - Could have a toString method that makes it easy to log the board.
+
+  - Consider adding a Square class
+    - Could have a toString method that makes it easy to log the square.
+
+*/
+
 const readlineSync = require('readline-sync');
 
 class Player {
@@ -11,19 +30,6 @@ class User extends Player {
     super(char);
   }
 }
-
-class Computer extends Player {
-  constructor(char) {
-    super(char);
-  }
-}
-
-class Game {
-}
-
-Game.prototype.getInput = function (player) {
-  return player.getInput();
-};
 
 User.prototype.getInput = function () {
   console.log('\n\n');
@@ -44,16 +50,49 @@ User.prototype.getInput = function () {
   this.board[idx] = this.char;
 };
 
-Game.prototype.firstPlayerChar = 'x';
-
-Game.prototype.secondPlayerChar = 'o';
-
-Game.prototype.playerInfo = {
-  firstPlayer: Object.getPrototypeOf(this).firstPlayer,
-  secondPlayer: Object.getPrototypeOf(this).secondPlayer,
-  firstPlayerChar: Object.getPrototypeOf(this).firstPlayerChar,
-  secondPlayerChar: Object.getPrototypeOf(this).secondPlayerChar
+User.prototype.getRowNum = function () {
+  let rowNum = Number(readlineSync.question('Row Number: '));
+  while (![1, 2, 3].includes(rowNum)) {
+    console.log('Error: Not a valid Row Number. Valid Row Numbers are 1 - 3');
+    rowNum = Number(readlineSync.question('Row Number: '));
+  }
+  return rowNum;
 };
+
+User.prototype.getColNum = function () {
+  let colNum = Number(readlineSync.question('Column Number: '));
+  while (![1, 2, 3].includes(colNum)) {
+    console.log('Error: Not a valid Column Number. Valid Column Numbers are 1 - 3');
+    colNum = Number(readlineSync.question('Column Number: '));
+  }
+  return colNum;
+};
+
+User.prototype.chooseValidSpace = function () {
+  let rowNum = this.getRowNum();
+  let colNum = this.getColNum();
+  let idx = (colNum - 1) + ((rowNum - 1) * 3);
+  return [rowNum, colNum, idx];
+};
+
+class Computer extends Player {
+  constructor(char) {
+    super(char);
+  }
+}
+
+class Game {
+  static firstPlayerChar = 'x';
+  static secondPlayerChar = 'o';
+  constructor() {
+    this.board = Array(9).fill(' ');
+  }
+}
+
+Game.prototype.getInput = function (player) {
+  return player.getInput();
+};
+
 Game.prototype.innerLoop = function () {
   while (true) {
     console.clear();
@@ -76,7 +115,7 @@ Game.prototype.setPlayers = function () {
   this.firstPlayer = this.chooseFirstPlayer();
 
   this.secondPlayer = (this.firstPlayer.constructor === User)
-    ? new Computer(this.secondPlayerChar) : new User(this.secondPlayerChar);
+    ? new Computer(Game.secondPlayerChar) : new User(Game.secondPlayerChar);
 };
 
 Game.prototype.mixInSharedObjects = function () {
@@ -111,8 +150,6 @@ Game.prototype.play = function () {
 
   console.log('The game has ended. Good bye...\n');
 };
-
-Game.prototype.board = Array(9).fill(' ');
 
 Game.prototype.leftPadding = function () {
   const NUM_OF_SPACES = 5;
@@ -189,41 +226,7 @@ Game.prototype.chooseFirstPlayer = function () {
     console.log("Error: Invalid Answer.");
     first = readlineSync.question("Please enter 'Computer' or 'User'");
   }
-  return first === 'User' ? new User(this.firstPlayerChar) : new Computer(this.firstPlayerChar);
-};
-
-Game.prototype.firstPlayerChar = 'x';
-
-Game.prototype.secondPlayerChar = 'o';
-
-Game.prototype.firstPlayer = null;
-
-Game.prototype.secondPlayer = null;
-
-
-User.prototype.getRowNum = function () {
-  let rowNum = Number(readlineSync.question('Row Number: '));
-  while (![1, 2, 3].includes(rowNum)) {
-    console.log('Error: Not a valid Row Number. Valid Row Numbers are 1 - 3');
-    rowNum = Number(readlineSync.question('Row Number: '));
-  }
-  return rowNum;
-};
-
-User.prototype.getColNum = function () {
-  let colNum = Number(readlineSync.question('Column Number: '));
-  while (![1, 2, 3].includes(colNum)) {
-    console.log('Error: Not a valid Column Number. Valid Column Numbers are 1 - 3');
-    colNum = Number(readlineSync.question('Column Number: '));
-  }
-  return colNum;
-};
-
-User.prototype.chooseValidSpace = function () {
-  let rowNum = this.getRowNum();
-  let colNum = this.getColNum();
-  let idx = (colNum - 1) + ((rowNum - 1) * 3);
-  return [rowNum, colNum, idx];
+  return first === 'User' ? new User(Game.firstPlayerChar) : new Computer(Game.firstPlayerChar);
 };
 
 Game.prototype.getInput = function (player) {
