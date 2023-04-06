@@ -1,10 +1,6 @@
 /*
 TODO:
   - Try to arrange the code so that:
-    - Try to always display the board at the same location on the screen
-    regardless of whether the welcome message is present.
-      - LS used two different display methods to accomplish this.
-        - See https://launchschool.com/lessons/93a83d87/assignments/527c4a79
 
   - Consider adding a Board class
     - Could have a toString method that makes it easy to log the board.
@@ -22,13 +18,13 @@ class Player {
   }
 }
 
-class User extends Player {
+class TTTUser extends Player {
   constructor(char) {
     super(char);
   }
 }
 
-User.prototype.getInput = function () {
+TTTUser.prototype.getInput = function () {
   console.log('\n\n');
   console.log('What space would you like to mark?');
   let rowNum = this.getRowNum();
@@ -47,7 +43,7 @@ User.prototype.getInput = function () {
   this.board[idx] = this.char;
 };
 
-User.prototype.getRowNum = function () {
+TTTUser.prototype.getRowNum = function () {
   let rowNum = Number(readlineSync.question('Row Number: '));
   while (![1, 2, 3].includes(rowNum)) {
     console.log('Error: Not a valid Row Number. Valid Row Numbers are 1 - 3');
@@ -56,7 +52,7 @@ User.prototype.getRowNum = function () {
   return rowNum;
 };
 
-User.prototype.getColNum = function () {
+TTTUser.prototype.getColNum = function () {
   let colNum = Number(readlineSync.question('Column Number: '));
   while (![1, 2, 3].includes(colNum)) {
     console.log('Error: Not a valid Column Number. Valid Column Numbers are 1 - 3');
@@ -65,7 +61,7 @@ User.prototype.getColNum = function () {
   return colNum;
 };
 
-User.prototype.chooseValidSpace = function () {
+TTTUser.prototype.chooseValidSpace = function () {
   let rowNum = this.getRowNum();
   let colNum = this.getColNum();
   let idx = (colNum - 1) + ((rowNum - 1) * 3);
@@ -78,7 +74,7 @@ class Computer extends Player {
   }
 }
 
-class Game {
+class TTTGame {
   static firstPlayerChar = 'x';
   static secondPlayerChar = 'o';
   constructor() {
@@ -86,15 +82,15 @@ class Game {
   }
 }
 
-Game.prototype.getInput = function (player) {
+TTTGame.prototype.getInput = function (player) {
   return player.getInput();
 };
 
-Game.prototype.innerLoop = function () {
+TTTGame.prototype.innerLoop = function () {
   while (true) {
     console.clear();
 
-    if (this.firstPlayer.constructor === User) {
+    if (this.firstPlayer.constructor === TTTUser) {
       this.displayBoard(this.computer.lastMove || '');
     }
 
@@ -112,33 +108,34 @@ Game.prototype.innerLoop = function () {
   }
 };
 
-Game.prototype.setPlayers = function () {
+TTTGame.prototype.setPlayers = function () {
   this.firstPlayer = this.chooseFirstPlayer();
 
-  this.secondPlayer = (this.firstPlayer.constructor === User)
-    ? new Computer(Game.secondPlayerChar) : new User(Game.secondPlayerChar);
+  this.secondPlayer = (this.firstPlayer.constructor === TTTUser)
+    ? new Computer(TTTGame.secondPlayerChar)
+    : new TTTUser(TTTGame.secondPlayerChar);
 
-  this.computer = (this.firstPlayer.constructor === User)
+  this.computer = (this.firstPlayer.constructor === TTTUser)
     ? this.secondPlayer : this.firstPlayer;
 
-  this.human = (this.firstPlayer.constructor === User)
+  this.human = (this.firstPlayer.constructor === TTTUser)
     ? this.firstPlayer : this.secondPlayer;
 
 };
 
-Game.prototype.mixInSharedObjects = function () {
+TTTGame.prototype.mixInSharedObjects = function () {
   Player.prototype.board = this.board;
   Player.prototype.winningCombos = this.winningCombos;
-  User.prototype.opponent = this.firstPlayer.constructor === User
+  TTTUser.prototype.opponent = this.firstPlayer.constructor === TTTUser
     ? this.secondPlayer
     : this.firstPlayer;
   Computer.prototype.opponent =
-    this.firstPlayer.constructor === User
+    this.firstPlayer.constructor === TTTUser
       ? this.firstPlayer
       : this.secondPlayer;
 };
 
-Game.prototype.play = function () {
+TTTGame.prototype.play = function () {
   while (true) {
     this.setPlayers();
 
@@ -159,19 +156,19 @@ Game.prototype.play = function () {
   console.log('The game has ended. Good bye...\n');
 };
 
-Game.prototype.leftPadding = function () {
+TTTGame.prototype.leftPadding = function () {
   const NUM_OF_SPACES = 5;
   return ' '.repeat(NUM_OF_SPACES);
 };
 
-Game.prototype.getRow = function (rowNum) {
+TTTGame.prototype.getRow = function (rowNum) {
   // Ensures rowNums align with playerChoices index;
   rowNum *= 3;
   return `  ${(rowNum / 3) + 1}  | ${this.board[rowNum]} | ${this.board[rowNum + 1]} | ${this.board[rowNum + 2]} |`;
 };
 
 
-Game.prototype.displayBoard = function (leadingLine = '\n') {
+TTTGame.prototype.displayBoard = function (leadingLine = '\n') {
   console.log(`${leadingLine}`);
   console.log('');
   console.log(`${this.leftPadding()}    Columns`);
@@ -185,14 +182,14 @@ Game.prototype.displayBoard = function (leadingLine = '\n') {
   console.log(`${this.leftPadding()} +---+---+---+`);
 };
 
-Game.prototype.winningCombos = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
+TTTGame.prototype.winningCombos = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
   [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
 
-Game.prototype.isTie = function () {
+TTTGame.prototype.isTie = function () {
   return !this.board.some(el => el === ' ');
 };
 
-Game.prototype.isWinner = function (player) {
+TTTGame.prototype.isWinner = function (player) {
   let char = player.char;
   for (let combo of this.winningCombos) {
     let [idxOne, idxTwo, idxThree] = combo;
@@ -206,7 +203,7 @@ Game.prototype.isWinner = function (player) {
   return false;
 };
 
-Game.prototype.logResult = function () {
+TTTGame.prototype.logResult = function () {
   console.clear();
 
   if (this.isWinner(this.firstPlayer)) {
@@ -218,7 +215,7 @@ Game.prototype.logResult = function () {
   console.log('\n\n');
 };
 
-Game.prototype.playAgain = function () {
+TTTGame.prototype.playAgain = function () {
   let playAgain = readlineSync.question('Would you like to play again? (yes or no) ');
   while (!['yes', 'no'].includes(playAgain)) {
     console.log('Error: please input a valid response');
@@ -227,7 +224,7 @@ Game.prototype.playAgain = function () {
   return playAgain;
 };
 
-Game.prototype.chooseFirstPlayer = function () {
+TTTGame.prototype.chooseFirstPlayer = function () {
   console.clear();
   let first = readlineSync.question("Who should go first? Enter 'Computer' or 'User': ");
 
@@ -235,10 +232,10 @@ Game.prototype.chooseFirstPlayer = function () {
     console.log("Error: Invalid Answer.");
     first = readlineSync.question("Please enter 'Computer' or 'User'");
   }
-  return first === 'User' ? new User(Game.firstPlayerChar) : new Computer(Game.firstPlayerChar);
+  return first === 'User' ? new TTTUser(TTTGame.firstPlayerChar) : new Computer(TTTGame.firstPlayerChar);
 };
 
-Game.prototype.getInput = function (player) {
+TTTGame.prototype.getInput = function (player) {
   return player.getInput();
 };
 
@@ -257,7 +254,6 @@ Computer.prototype.getInput = function () {
   colNum = idx - (rowNum * 3);
   this.board[idx] = this.char;
   this.lastMove = `The computer chose space (${rowNum + 1}, ${colNum + 1})`;
-  // console.log(`The computer chose space (${rowNum + 1}, ${colNum + 1})`);
 };
 
 Computer.prototype.defensiveOpportunity = function () {
@@ -281,22 +277,29 @@ Computer.prototype.defensiveOpportunity = function () {
   return null;
 };
 
+// eslint-disable-next-line max-lines-per-function
 Computer.prototype.offensiveOpportunity = function () {
+  debugger;
+  const MIDDLE_SQUARE_IDX = 4;
+  if (this.board.every(square => square === ' ')) return MIDDLE_SQUARE_IDX;
   let missingSquare;
-  for (let [idxOne, idxTwo, idxThree] of this.winningCombos) {
+  for (let combo of this.winningCombos) {
+    const [idxOne, idxTwo, idxThree] = combo;
     let count = 0;
+    let opponentCount = 0;
     if (this.board[idxOne] === this.char) count += 1;
+    else if (this.board[idxOne] === this.opponent.char) opponentCount += 1;
     else missingSquare = idxOne;
     if (this.board[idxTwo] === this.char) count += 1;
-    else missingSquare = idxTwo;
+    else if (this.board[idxTwo] === this.opponent.char) opponentCount += 1;
+    else if (!missingSquare) missingSquare = idxTwo;
+    // eslint-disable-next-line no-unused-vars
     if (this.board[idxThree] === this.char) count += 1;
-    else missingSquare = idxThree;
+    else if (this.board[idxThree] === this.opponent.char) opponentCount += 1;
+    else if (!missingSquare) missingSquare = idxThree;
     // Decrement count if the other player's char is 1 of 3 spaces in the combo.
-    if ([
-      this.board[idxOne],
-      this.board[idxTwo],
-      this.board[idxThree]].includes(this.opponent.char)) count -= 1;
-    if (count === 2) return missingSquare;
+    if (opponentCount > 0) missingSquare = null;
+    if (missingSquare && opponentCount === 0) return missingSquare;
   }
   return null;
 };
@@ -317,6 +320,6 @@ Computer.prototype.chooseRandom = function () {
 };
 
 
-const game = new Game();
+const tttGame = new TTTGame();
 
-game.play();
+tttGame.play();
