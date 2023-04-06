@@ -1,9 +1,6 @@
 /*
 TODO:
   - Try to arrange the code so that:
-    - The user can see the welcome message and the board simultaneously when
-    she starts the game.
-    - Don't display the welcome message after the human's first move.
     - Try to always display the board at the same location on the screen
     regardless of whether the welcome message is present.
       - LS used two different display methods to accomplish this.
@@ -97,11 +94,15 @@ Game.prototype.innerLoop = function () {
   while (true) {
     console.clear();
 
-    if (this.firstPlayer.constructor === User) this.displayBoard();
+    if (this.firstPlayer.constructor === User) {
+      this.displayBoard(this.computer.lastMove || '');
+    }
 
     this.getInput(this.firstPlayer);
 
-    if (this.firstPlayer.constructor === Computer) this.displayBoard();
+    if (this.firstPlayer.constructor === Computer) {
+      this.displayBoard(this.computer.lastMove);
+    }
 
     if (this.isWinner(this.firstPlayer) || this.isTie()) break;
 
@@ -116,6 +117,13 @@ Game.prototype.setPlayers = function () {
 
   this.secondPlayer = (this.firstPlayer.constructor === User)
     ? new Computer(Game.secondPlayerChar) : new User(Game.secondPlayerChar);
+
+  this.computer = (this.firstPlayer.constructor === User)
+    ? this.secondPlayer : this.firstPlayer;
+
+  this.human = (this.firstPlayer.constructor === User)
+    ? this.firstPlayer : this.secondPlayer;
+
 };
 
 Game.prototype.mixInSharedObjects = function () {
@@ -162,7 +170,10 @@ Game.prototype.getRow = function (rowNum) {
   return `  ${(rowNum / 3) + 1}  | ${this.board[rowNum]} | ${this.board[rowNum + 1]} | ${this.board[rowNum + 2]} |`;
 };
 
-Game.prototype.displayBoard = function () {
+
+Game.prototype.displayBoard = function (leadingLine = '\n') {
+  console.log(`${leadingLine}`);
+  console.log('');
   console.log(`${this.leftPadding()}    Columns`);
   console.log(`${this.leftPadding()}   1   2   3`);
   console.log(`${this.leftPadding()} +---+---+---+`);
@@ -199,12 +210,10 @@ Game.prototype.logResult = function () {
   console.clear();
 
   if (this.isWinner(this.firstPlayer)) {
-    console.log(`${this.firstPlayer.constructor.name} wins.\n`);
+    this.displayBoard(`${this.firstPlayer.constructor.name} wins.`);
   } else if (this.isWinner(this.secondPlayer)) {
-    console.log(`${this.secondPlayer.constructor.name} wins.\n`);
-  } else console.log("It's a tie game.\n");
-
-  this.displayBoard();
+    this.displayBoard(`${this.secondPlayer.constructor.name} wins.`);
+  } else this.displayBoard("It's a tie game.");
 
   console.log('\n\n');
 };
@@ -247,7 +256,8 @@ Computer.prototype.getInput = function () {
   rowNum = Math.floor(idx / 3);
   colNum = idx - (rowNum * 3);
   this.board[idx] = this.char;
-  console.log(`The computer chose space (${rowNum + 1}, ${colNum + 1})`);
+  this.lastMove = `The computer chose space (${rowNum + 1}, ${colNum + 1})`;
+  // console.log(`The computer chose space (${rowNum + 1}, ${colNum + 1})`);
 };
 
 Computer.prototype.defensiveOpportunity = function () {
