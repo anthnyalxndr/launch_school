@@ -1,7 +1,8 @@
-# Launch School Directories
+# Launch School Directories & Files
 /intro_to_programming_with_js/sb*
 /assessments
 notes
+/courses/js120/oo_tic_tac_toe_redo.js
 
 #VS Code gitignore extension additions specific to MacOS.
 *.DS_Store
