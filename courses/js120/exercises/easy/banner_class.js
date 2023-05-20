@@ -70,14 +70,56 @@ class Banner {
 let banner1 = new Banner("To boldly go where no one has gone before.");
 banner1.displayBanner(10);
 /*
++------------+
+|            |
+| To boldly  |
+|  go where  |
+|   no one   |
+|  has gone  |
+|  before.   |
+|            |
++------------+
+ */
+
+banner1.displayBanner(21);
+/*
++-----------------------+
+|                       |
+|  To boldly go where   |
+|    no one has gone    |
+|        before.        |
+|                       |
++-----------------------+
+ */
+
+banner1.displayBanner();
+/*
 +--------------------------------------------+
 |                                            |
 | To boldly go where no one has gone before. |
 |                                            |
 +--------------------------------------------+
- */
+*/
 
 let banner2 = new Banner("");
+banner2.displayBanner(10);
+/*
++------------+
+|            |
+|            |
+|            |
++------------+
+ */
+
+banner2.displayBanner(21);
+/*
++-----------------------+
+|                       |
+|                       |
+|                       |
++-----------------------+
+ */
+
 banner2.displayBanner();
 /*
 +--+
