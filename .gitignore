@@ -3,6 +3,7 @@
 /assessments
 notes
 /courses/js120/oo_tic_tac_toe_redo.js
+/courses/js120/interview_assessment
 
 #VS Code gitignore extension additions specific to MacOS.
 *.DS_Store
