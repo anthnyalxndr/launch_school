@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1686884829361" clover="3.2.0">
-  <project timestamp="1686884829361" name="All files">
+<coverage generated="1686885299642" clover="3.2.0">
+  <project timestamp="1686885299642" name="All files">
     <metrics statements="50" coveredstatements="42" conditionals="10" coveredconditionals="8" methods="38" coveredmethods="28" elements="98" coveredelements="78" complexity="0" loc="50" ncloc="50" packages="1" files="2" classes="2"/>
     <file name="todo.js" path="/Users/ata/Code/js/launch_school/courses/js130/iteration_and_the_todo_class/todo.js">
       <metrics statements="11" coveredstatements="10" conditionals="2" coveredconditionals="2" methods="6" coveredmethods="5"/>
