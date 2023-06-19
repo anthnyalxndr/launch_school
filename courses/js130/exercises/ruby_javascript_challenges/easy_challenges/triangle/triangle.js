@@ -39,21 +39,20 @@ class Triangle {
       const sum = (num1, num2) => num1 + num2;
       for (let combo of sideCombinations) {
         let [[first, second], third] = combo;
-        if (sum(first, second) > third) return true;
+        if (sum(first, second) <= third) return true;
       }
       return false;
     };
 
-    const isEquilateral = () => (new Set(sideLengths)).size === 1;
-
-    if (!isEquilateral() && violatesTriangleInequality()) {
+    if (violatesTriangleInequality()) {
       throw new Error("Violates Triangle Inequality");
     }
   }
+
   kind() {
     const triangleCategoryMap = {
       3: 'scalene',
-      2: 'isoscles',
+      2: 'isosceles',
       1: 'equilateral',
     };
     let uniqueSides = (new Set(this.sideLengths)).size;
@@ -61,6 +60,10 @@ class Triangle {
   }
 }
 
-console.log((new Triangle(2, 2, 2).kind()));
+// (function tests() {
+//   (function violate() {
+//     const triangle = new Triangle(10, 1, 3);
+//   })();
+// })();
 
 module.exports = Triangle;

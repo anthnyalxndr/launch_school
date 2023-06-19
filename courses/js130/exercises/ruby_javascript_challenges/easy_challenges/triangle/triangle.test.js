@@ -1,10 +1,13 @@
+/* eslint-disable no-new */
 /* eslint-disable max-lines-per-function */
 let Triangle = require("./triangle.js");
 
 describe("Triangle", () => {
   test("equilateral triangles have equal sides", () => {
     const triangle = new Triangle(2, 2, 2);
-    expect(triangle.kind()).toEqual("equilateral");
+    const actualValue = triangle.kind();
+    const expectedValue = "equilateral";
+    expect(actualValue).toEqual(expectedValue);
   });
 
   test("larger equilateral triangles also have equal sides", () => {
