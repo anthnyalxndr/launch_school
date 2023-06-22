@@ -2,8 +2,7 @@
 
 class Octal {
   constructor (num) {
-    const invalidInput = /[^0-7]/;
-    this.octal = invalidInput.test(num) ? '0' : num;
+    this.octal = num;
   }
   /*
   Algo:
@@ -16,7 +15,9 @@ class Octal {
       - Transform each digit to a decimal and add to decimal
     - Return decimal
   */
+  invalidOctal() { return /[^0-7]/.test(this.octal) }
   toDecimal() {
+    if (this.invalidOctal()) return 0;
     let decimal = 0;
     for (
       let idx = 0, currentPower = this.octal.length - 1;
