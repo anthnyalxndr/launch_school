@@ -16,18 +16,16 @@ class SumOfMultiples {
       in the array by itself
     - return the sum of the set
     */
-    let allMultiples = new Set();
-    let currentMultiples = this.DEFAULT_MULTIPLES;
+    let allMultiples = new Set([0]);
+    let currentMultiples = this.DEFAULT_MULTIPLES.slice();
     while (Math.min(...currentMultiples) < limit) {
       let validMultiples = currentMultiples.filter((num) => num < limit);
       validMultiples.forEach((num) => allMultiples.add(num));
-      currentMultiples = currentMultiples.map(
-        (num, idx) => num + this.DEFAULT_MULTIPLES[idx]
+      currentMultiples.forEach(
+        (_, idx, arr) => { arr[idx] += this.DEFAULT_MULTIPLES[idx] }
       );
     }
-    return allMultiples.size === 0
-      ? 0
-      : [...allMultiples].reduce((sum, num) => sum + num);
+    return [...allMultiples].reduce((sum, num) => sum + num, 0);
   }
   to(limit) {
     /*
@@ -48,9 +46,7 @@ class SumOfMultiples {
         (num, idx) => num + this.multiples[idx]
       );
     }
-    return allMultiples.size === 0
-      ? 0
-      : [...allMultiples].reduce((sum, num) => sum + num);
+    return [...allMultiples].reduce((sum, num) => sum + num, 0);
   }
 }
 
