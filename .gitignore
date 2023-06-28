@@ -8,6 +8,7 @@ notes
 /courses/js120/oo_tic_tac_toe_redo.js
 /courses/js120/interview_assessment
 /courses/js130/todolist_project
+node_modules
 
 #VS Code gitignore extension additions specific to MacOS.
 *.DS_Store
