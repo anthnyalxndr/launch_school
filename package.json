@@ -8,6 +8,7 @@
   "dependencies": {
     "fraction.js": "github:infusion/Fraction.js",
     "jest": "^29.5.0",
+    "lodash": "^4.17.21",
     "readline-sync": "^1.4.10",
     "setTimeout": "^0.4.9"
   }
