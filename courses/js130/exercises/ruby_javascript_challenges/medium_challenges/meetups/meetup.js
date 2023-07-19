@@ -24,30 +24,17 @@ class Meetup {
   ];
 
   _setDayToSchedule(weekday, schedule) {
-    let scheduleMap = {
-      first: 1,
-      second: 2,
-      third: 3,
-      fourth: 4,
-      fifth: 5,
+    let scheduleFuncMap = {
+      first: this._setDayToNthOccurrence.bind(this, weekday, 1),
+      second: this._setDayToNthOccurrence.bind(this, weekday, 2),
+      third: this._setDayToNthOccurrence.bind(this, weekday, 3),
+      fourth: this._setDayToNthOccurrence.bind(this, weekday, 4),
+      fifth: this._setDayToNthOccurrence.bind(this, weekday, 5),
+      last: this._setDayToLastDay.bind(this, weekday),
+      teenth: this._setDayToTeenth.bind(this, weekday),
     };
 
-    let scheduleOccurences = Object.keys(scheduleMap);
-
-    if (scheduleOccurences.includes(schedule)) {
-      this._setDayToNthOccurrence(weekday, scheduleMap[schedule]);
-      return;
-    }
-
-    if (schedule === 'last') {
-      this._setDayToLastDay(weekday);
-      return;
-    }
-
-    if (schedule === 'teenth') {
-      this._setDayToTeenth(weekday);
-    }
-
+    scheduleFuncMap[schedule]();
   }
 
   _setDayToNthOccurrence(weekday, occurence) {
