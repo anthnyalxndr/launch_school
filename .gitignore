@@ -9,6 +9,7 @@ notes
 /courses/js120/interview_assessment
 /courses/js130/todolist_project
 node_modules
+/courses/js130/139_assessment
 
 #VS Code gitignore extension additions specific to MacOS.
 *.DS_Store
