@@ -1,8 +1,19 @@
 #! /opt/homebrew/bin/bash
 function server {
     while true; do
-        read message
-        echo "You said $message"
+        read method path version
+        echo
+    if [[ $method = "GET" ]]; then
+        if [[ $path = "www/leopard.html" ]]; then
+            echo "HTTP/1.1 200 OK"; echo ; cat ./www/leopard.html; echo
+        elif [[ $path = "www/lion.html" ]]; then
+            echo "HTTP/1.1 200 OK";  echo ; cat ./www/lion.html; echo
+        elif [[ $path = "www/tiger.html" ]]; then
+            echo "HTTP/1.1 200 OK";  echo ; cat ./www/tiger.html; echo
+        fi
+    else 
+        echo "HTTP/1.1 400 Bad Request"
+    fi
     done
 }
 
