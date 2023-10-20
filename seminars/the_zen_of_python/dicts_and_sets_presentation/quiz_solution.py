@@ -2,9 +2,12 @@ import string
 
 ALNUMS = set(string.ascii_lowercase + string.digits)
 
-def missingAlnum(pangram):
-    onlyalnum = set([char.lower() for char in pangram if char.isalnum()])
-    return ALNUMS ^ onlyalnum
+def missing_alnum(pangram):
+    # filter out non-alphanumeric characters
+    filtered_pangram = set([char.lower() for char in pangram if char.isalnum()])
+    # return the symmetric difference between the complete set of
+    # of alphanumeric characters and the filtered pangram.
+    return ALNUMS ^ filtered_pangram
 
 
 strings = [
@@ -14,4 +17,7 @@ strings = [
 ]
 
 for pangram in strings:
-    print(missingAlnum(pangram))
+    print(missing_alnum(pangram))
+# {'7'}
+# {'l'}
+# {'p'}
