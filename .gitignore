@@ -1,6 +1,3 @@
-# Sandbox files
-/Users/ata/Code/sandbox
-
 # Launch School Directories & Files
 /intro_to_programming_with_js/sb*
 /assessments
@@ -8,7 +5,7 @@ notes
 /courses/js120/oo_tic_tac_toe_redo.js
 /courses/js120/interview_assessment
 /courses/js130/todolist_project
-node_modules
+/node_modules
 /courses/js130/139_assessment
 
 #VS Code gitignore extension additions specific to MacOS.
