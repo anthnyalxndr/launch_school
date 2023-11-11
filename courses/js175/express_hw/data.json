@@ -1,0 +1,57 @@
+{
+    "langProperties": {
+        
+        "english": {
+            "title": "This is the page title",
+            "h1": "Hello World!",
+            "p": "I'm going to be a software engineer soon!",
+            "img": {
+                "earth": {
+                    "alt": "The Earth",
+                    "title": "The Earth",
+                    "src": "/images/earth.jpg"
+                },
+                "flag": {
+                    "alt": "US Flag",
+                    "title": "Go to US English site",
+                    "src": "/images/flag-of-United-States-of-America.png"
+
+                }
+            }
+        },
+        "french": {
+            "title": "Ceci est le titre de la page",
+            "h1": "Bonjour le monde!",
+            "p": "Je vais bientôt être un ingénieur logiciel!",
+            "img": {
+                "earth": {
+                    "alt": "La planète Terre", 
+                    "title": "La planète Terre",
+                    "src": "/images/earth.jpg"
+                },
+                "flag": {
+                    "alt": "Drapeau de la france",
+                    "title": "Aller sur le site français",
+                    "src": "/images/flag-of-France.png"
+                }
+            }
+        },
+        "serbian": {
+            "title": "Ово је наслов странице",
+            "h1": "h1 Здраво свете!",
+            "p": "Ускоро ћу бити софтверски инжењер!",
+            "img": {
+                "earth": {
+                    "alt": "Планета Земља", 
+                    "title": "Планета Земља",
+                    "src": "/images/earth.jpg"
+                },
+                "flag": {
+                    "alt": "Застава Србије", 
+                    "title": "Идите на српски сајт",
+                    "src": "/images/flag-of-Serbia.png"
+                }
+            }
+        }
+    }
+}
