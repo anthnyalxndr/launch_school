@@ -50,10 +50,8 @@ const clone = object => JSON.parse(JSON.stringify(object));
 
 app.set("views", "./views");
 app.set("view engine", "pug");
-
 app.use(express.static("public"));
 app.use(morgan("common"));
-
 app.use(session({
   cookie: {
     httpOnly: true,
@@ -78,17 +76,8 @@ app.use(function initContacts(req, res, next) {
   next();
 });
 app.use(express.urlencoded({ extended: false }));
-app.use(function addUniqueContacts(req, res, next) {
-  let uniqueNames = new Set();
-  req.session.contactData.forEach((contact) => {
-    const { firstName, lastName } = contact;
-    uniqueNames.add(firstName + lastName);
-  });
-  req.session.uniqueNames = uniqueNames;
-  next();
-})
 
-app.use((req, res, next) => {
+app.use(function swapFlash(req, res, next) {
   res.locals.flash = req.session.flash;
   delete req.session.flash;
   next();
@@ -106,62 +95,62 @@ app.get("/contacts", (req, res) => {
 
 app.route("/contacts/new")
   .get((req, res, next) => {
-    res.render("new-contact");
+    res.render("new-contact", );
   })
   .post(
-    [
-      body('firstName')
-        .trim()
-        .isLength({ min: 1 })
-        .withMessage(`First Name is required.`)
-        .bail()
-        .isLength({ max: 25 })
-        .withMessage(`First Name is too long. Maximum length is 25 characters.`)
-        .isAlpha()
-        .withMessage(`First Name contains invalid characters. The name must be alphabetic.`),
-      body('lastName')
-        .trim()
-        .isLength({ min: 1 })
-        .withMessage(`Last Name is required.`)
-        .bail()
-        .isLength({ max: 25 })
-        .withMessage(`Last Name is too long. Maximum length is 25 characters.`)
-        .isAlpha()
-        .withMessage(`Last Name contains invalid characters. The name must be alphabetic.`),
+    function validateInput(req, res, next) {
+        body('firstName')
+          .trim()
+          .isLength({ min: 1 })
+          .withMessage(`First Name is required.`)
+          .bail()
+          .isLength({ max: 25 })
+          .withMessage(`First Name is too long. Maximum length is 25 characters.`)
+          .isAlpha()
+          .withMessage(`First Name contains invalid characters. The name must be alphabetic.`);
+        body('lastName')
+          .trim()
+          .isLength({ min: 1 })
+          .withMessage(`Last Name is required.`)
+          .bail()
+          .isLength({ max: 25 })
+          .withMessage(`Last Name is too long. Maximum length is 25 characters.`)
+          .isAlpha()
+          .withMessage(`Last Name contains invalid characters. The name must be alphabetic.`);
       body("phoneNumber")
         .trim()
         .isLength({ min: 1 })
         .withMessage("Phone number is required.")
         .bail()
         .matches(/^\d\d\d-\d\d\d-\d\d\d\d$/)
-        .withMessage("Invalid phone number format. Use ###-###-####."),
-    ],  
-  (req, res, next) => {
-    let errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      errors.array().forEach(error => req.flash("error", error.msg));
-      // The next 2 lines are for demonstration purposes only.
-      
-      res.render("new-contact", {
-        flash: req.flash(),
+        .withMessage("Invalid phone number format. Use ###-###-####.");
+      next();
+    },  
+    function renderErrors(req, res, next) {
+      let errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        errors.array().forEach(error => req.flash("error", error.msg));
+
+        res.render("new-contact", {
+          flash: req.flash(),
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          phoneNumber: req.body.phoneNumber,
+        });
+      } else {
+        next();
+      }
+    },
+    function redirect(req, res) {
+      req.session.contactData.push({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         phoneNumber: req.body.phoneNumber,
       });
-    } else {
-      next();
-    }
-  },
-  (req, res) => {
-    req.session.contactData.push({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      phoneNumber: req.body.phoneNumber,
-    });
 
-    req.flash("success", "New contact added to list!");
-    res.redirect("/contacts");
-  }
+      req.flash("success", "New contact added to list!");
+      res.redirect("/contacts");
+    }
 );
 
 app.listen(3000, () => {
