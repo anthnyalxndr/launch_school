@@ -1,0 +1,3 @@
+{
+    "ignore": ["/home/ata/code/launch_school/courses/js175/contacts/node_modules/express-validator/*"]
+}

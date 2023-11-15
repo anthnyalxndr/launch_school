@@ -1,0 +1,40 @@
+extends layout
+
+//- - 
+//-   function valueAttr(name) {
+//-     const value = formData[name];
+//-     return value ? `${value}` : '';
+//-   }
+
+  
+block content
+  -
+    const validationAttributes = {
+      firstName: `required maxlength="25" pattern="[A-Za-z]{1,25}"`,
+      lastName: `required maxlength="25" pattern="[A-Za-z]{1,25}"`,
+      phoneNumber: `required pattern="\\d{3}-\\d{3}-\\d{4}" `,
+    }
+  h2 Create a New Contact
+  form(action="/contacts/new" method="post")
+    fieldset
+      dl
+        dt
+          label(for="firstName") First Name:
+        dd
+          input(type="text" id="firstName" name="firstName" value=firstName || "")
+      dl
+        dt
+          label(for="lastName") Last Name:
+        dd
+          input(type="text" id="lastName" name="lastName" value=lastName || "")
+      dl
+        dt
+          label(for="phoneNumber") Phone Number:
+        dd
+          input(type="text"
+                id="phoneNumber"
+                name="phoneNumber"
+                placeholder="###-###-####" value=phoneNumber || "")
+    fieldset
+      input(type="submit" value="Save")
+      button.cancel(formaction="/contacts" formmethod="get") Cancel
