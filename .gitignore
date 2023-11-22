@@ -1,41 +1,4 @@
-# Launch School Directories & Files
-/intro_to_programming_with_js/sb*
-/assessments
-notes
-/courses/js120/oo_tic_tac_toe_redo.js
-/courses/js120/interview_assessment
-/courses/js130/todolist_project
-/node_modules
-/courses/js130/139_assessment
-
-#VS Code gitignore extension additions specific to MacOS.
-*.DS_Store
-
-# General
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Icon must end with two \r
-Icon
-
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-courses/js100/intro_to_programming_with_js/functions/sb.js
+**/session-store.db
+**/node_modules
+package.json
+package-lock.json

@@ -1,0 +1,36 @@
+extends layout
+block title
+    title #{title}
+
+block body
+  body
+    nav
+      ul
+        each lang in langs
+          li
+            a(href=`/${lang}` class=`${isCurrent(lang, current)}`)
+              img.flag(src=`${langProperties[lang].img.flag.src}`, alt=`${langProperties[lang].img.flag.alt}`, title=`${langProperties[lang].img.flag.title}`)
+        //- li
+        //-   a(href="/english" class=`${isCurrent('english')}`)
+        //-     img.flag(src="/images/flag-of-United-States-of-America.png"
+        //-              alt="US Flag"
+        //-              title="Go to US English site")
+        //- li
+        //-   a(href="/french" class=`${isCurrent('french')}`)
+        //-     img.flag(src="/images/flag-of-France.png"
+        //-              alt="Drapeau de la france"
+        //-              title="Aller sur le site français")
+        //- li
+        //-   a(href="/serbian" class=`${isCurrent('serbian')}`)
+        //-     img.flag(src="/images/flag-of-Serbia.png"
+        //-              alt="Застава Србије"
+        //-              title="Идите на српски сајт")
+        
+    header
+      h1 #{h1}
+    main
+      p #{p}
+      img(src=`${img.earth.src}` alt=`${img.earth.alt}` title=`${img.earth.title}`)
+
+
+        
